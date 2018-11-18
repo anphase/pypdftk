@@ -159,6 +159,7 @@ def gen_xfdf(datas={}):
     f = open(out_file, 'wb')
     f.write((tpl.encode('UTF-8')))
     f.close()
+    os.close(handle)
     return out_file
 
 
