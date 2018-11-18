@@ -10,7 +10,7 @@ Proudly brought to you by the [revolunet][1] team and [awesome contributors](htt
 ### `fill_form`
 Fill a PDF with given data and returns the output PDF path
  - `pdf_path` : input PDF
- - `datas` : dictionnary of fielf names / values
+ - `datas` : dictionnary of field names / values
  - `out_file` (default=auto) : output PDF path. will use tempfile if not provided
  - `flatten` (default=True) : flatten the final PDF
 
