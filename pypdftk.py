@@ -1,11 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-''' pypdftk
+""" pypdftk
 
 Python module to drive the awesome pdftk binary.
 See http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
 
-'''
+"""
 
 import logging
 import os
@@ -39,9 +39,10 @@ def check_output(*popenargs, **kwargs):
 
 
 def run_command(command, shell=False):
-    ''' run a system command and yield output '''
+    """ run a system command and yield output """
     p = check_output(command, shell=shell)
     return p.split(b'\n')
+
 
 try:
     run_command([PDFTK_PATH])
@@ -50,7 +51,7 @@ except OSError:
 
 
 def get_num_pages(pdf_path):
-    ''' return number of pages in a given PDF file '''
+    """ return number of pages in a given PDF file """
     for line in run_command([PDFTK_PATH, pdf_path, 'dump_data']):
         if line.lower().startswith(b'numberofpages'):
             return int(line.split(b':')[1])
@@ -58,15 +59,15 @@ def get_num_pages(pdf_path):
 
 
 def fill_form(pdf_path, datas={}, out_file=None, flatten=True):
-    '''
+    """
         Fills a PDF form with given dict input data.
         Return temp file if no out_file provided.
-    '''
-    cleanOnFail = False
+    """
+    clean_on_fail = False
     tmp_fdf = gen_xfdf(datas)
     handle = None
     if not out_file:
-        cleanOnFail = True
+        clean_on_fail = True
         handle, out_file = tempfile.mkstemp()
 
     cmd = "%s %s fill_form %s output %s" % (PDFTK_PATH, pdf_path, tmp_fdf, out_file)
@@ -75,7 +76,7 @@ def fill_form(pdf_path, datas={}, out_file=None, flatten=True):
     try:
         run_command(cmd, True)
     except:
-        if cleanOnFail:
+        if clean_on_fail:
             os.remove(tmp_fdf)
         raise
     finally:
@@ -84,10 +85,11 @@ def fill_form(pdf_path, datas={}, out_file=None, flatten=True):
     os.remove(tmp_fdf)
     return out_file
 
+
 def dump_data_fields(pdf_path):
-    '''
+    """
         Return list of dicts of all fields in a PDF.
-    '''
+    """
     cmd = "%s %s dump_data_fields" % (PDFTK_PATH, pdf_path)
     # Either can return strings with :
     #    field_data = map(lambda x: x.decode("utf-8").split(': ', 1), run_command(cmd, True))
@@ -97,14 +99,15 @@ def dump_data_fields(pdf_path):
     fields = [list(group) for k, group in itertools.groupby(field_data, lambda x: len(x) == 1) if not k]
     return [dict(f) for f in fields]
 
+
 def concat(files, out_file=None):
-    '''
+    """
         Merge multiples PDF files.
         Return temp file if no out_file provided.
-    '''
-    cleanOnFail = False
+    """
+    clean_on_fail = False
     if not out_file:
-        cleanOnFail = True
+        clean_on_fail = True
         handle, out_file = tempfile.mkstemp()
     if len(files) == 1:
         shutil.copyfile(files[0], out_file)
@@ -114,26 +117,26 @@ def concat(files, out_file=None):
     try:
         run_command(args)
     except:
-        if cleanOnFail:
+        if clean_on_fail:
             os.remove(out_file)
         raise
     return out_file
 
 
 def split(pdf_path, out_dir=None):
-    '''
+    """
         Split a single PDF file into pages.
         Use a temp directory if no out_dir provided.
-    '''
-    cleanOnFail = False
+    """
+    clean_on_fail = False
     if not out_dir:
-        cleanOnFail = True
+        clean_on_fail = True
         out_dir = tempfile.mkdtemp()
     out_pattern = '%s/page_%%06d.pdf' % out_dir
     try:
         run_command((PDFTK_PATH, pdf_path, 'burst', 'output', out_pattern))
     except:
-        if cleanOnFail:
+        if clean_on_fail:
             shutil.rmtree(out_dir)
         raise
     out_files = os.listdir(out_dir)
@@ -142,7 +145,7 @@ def split(pdf_path, out_dir=None):
 
 
 def gen_xfdf(datas={}):
-    ''' Generates a temp XFDF file suited for fill_form function, based on dict input data '''
+    """ Generates a temp XFDF file suited for fill_form function, based on dict input data """
     fields = []
     for key, value in datas.items():
         fields.append("""        <field name="%s"><value>%s</value></field>""" % (key, value))
@@ -158,11 +161,12 @@ def gen_xfdf(datas={}):
     f.close()
     return out_file
 
+
 def replace_page(pdf_path, page_number, pdf_to_insert_path):
-    '''
+    """
     Replace a page in a PDF (pdf_path) by the PDF pointed by pdf_to_insert_path.
     page_number is the number of the page in pdf_path to be replaced. It is 1-based.
-    '''
+    """
     A = 'A=' + pdf_path
     B = 'B=' + pdf_to_insert_path
     output_temp = tempfile.mktemp(suffix='.pdf')
@@ -185,31 +189,33 @@ def replace_page(pdf_path, page_number, pdf_to_insert_path):
     shutil.copy(output_temp, pdf_path)
     os.remove(output_temp)
 
+
 def stamp(pdf_path, stamp_pdf_path, output_pdf_path=None):
-    '''
+    """
     Applies a stamp (from stamp_pdf_path) to the PDF file in pdf_path. Useful for watermark purposes.
     If not output_pdf_path is provided, it returns a temporary file with the result PDF.
-    '''
+    """
     output = output_pdf_path or tempfile.mktemp(suffix='.pdf')
     args = [PDFTK_PATH, pdf_path, 'multistamp', stamp_pdf_path, 'output', output]
     run_command(args)
     return output
 
-def pdftk_cmd_util(pdf_path, action="compress",out_file=None, flatten=True):
-    '''
+
+def pdftk_cmd_util(pdf_path, action="compress", out_file=None, flatten=True):
+    """
     :type action: should valid action, in string format. Eg: "uncompress"
     :param pdf_path: input PDF file
     :param out_file: (default=auto) : output PDF path. will use tempfile if not provided
     :param flatten: (default=True) : flatten the final PDF
     :return: name of the output file.
-    '''
+    """
     actions = ["compress", "uncompress"]
     assert action in actions, "Unknown action. Failed to perform given action '%s'." % action
 
     handle = None
-    cleanOnFail = False
+    clean_on_fail = False
     if not out_file:
-        cleanOnFail = True
+        clean_on_fail = True
         handle, out_file = tempfile.mkstemp()
 
     cmd = "%s %s output %s %s" % (PDFTK_PATH, pdf_path, out_file, action)
@@ -219,7 +225,7 @@ def pdftk_cmd_util(pdf_path, action="compress",out_file=None, flatten=True):
     try:
         run_command(cmd, True)
     except:
-        if cleanOnFail:
+        if clean_on_fail:
             os.remove(out_file)
         raise
     finally:
@@ -229,7 +235,7 @@ def pdftk_cmd_util(pdf_path, action="compress",out_file=None, flatten=True):
 
 
 def compress(pdf_path, out_file=None, flatten=True):
-    '''
+    """
     These are only useful when you want to edit PDF code in a text
     editor like vim or emacs.  Remove PDF page stream compression by
     applying the uncompress filter. Use the compress filter to
@@ -239,13 +245,13 @@ def compress(pdf_path, out_file=None, flatten=True):
     :param out_file: (default=auto) : output PDF path. will use tempfile if not provided
     :param flatten: (default=True) : flatten the final PDF
     :return: name of the output file.
-    '''
+    """
 
     return pdftk_cmd_util(pdf_path, "compress", out_file, flatten)
 
 
 def uncompress(pdf_path, out_file=None, flatten=True):
-    '''
+    """
     These are only useful when you want to edit PDF code in a text
     editor like vim or emacs.  Remove PDF page stream compression by
     applying the uncompress filter. Use the compress filter to
@@ -255,6 +261,6 @@ def uncompress(pdf_path, out_file=None, flatten=True):
     :param out_file: (default=auto) : output PDF path. will use tempfile if not provided
     :param flatten: (default=True) : flatten the final PDF
     :return: name of the output file.
-    '''
+    """
 
     return pdftk_cmd_util(pdf_path, "uncompress", out_file, flatten)
