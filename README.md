@@ -8,34 +8,34 @@ Proudly brought to you by the [revolunet][1] team and [awesome contributors](htt
 ## Features
 
 ### `fill_form`
-Fill a PDF with given data and returns the output PDF path
+Fills a PDF with given data and returns the output PDF path
  - `pdf_path` : input PDF
- - `datas` : dictionnary of field names / values
- - `out_file` (default=auto) : output PDF path. will use tempfile if not provided
+ - `datas` : dictionary of field names / values
+ - `out_file` (default=auto) : output PDF path. Will use tempfile if not provided
  - `flatten` (default=True) : flatten the final PDF
 
 ### `concat`
-Merge multiple PDFs into one single file and returns the output PDF path
+Merges multiple PDFs into one single file and returns the output PDF path
  - `files` : list of PDF files to concatenate
- - `out_file` (default=auto) : output PDF path. will use tempfile if not provided
+ - `out_file` (default=auto) : output PDF path. Will use tempfile if not provided
 
 ### `split`
-Split a single PDF in many pages and return a list of pages paths
+Splits a single PDF in many pages and returns a list of pages paths
  - `pdf_path` : input PDF
- - `out_dir` (default=auto) : output PDFs dir. will use tempfile if not provided
+ - `out_dir` (default=auto) : output PDFs dir. Will use tempfile if not provided
 
 **warning** if you give a out_dir parameter, ensure its empty, or the split function may destroy your files and return incorrect results.
 
 ### `gen_xfdf`
-Generate a XFDF file suited for filling PDF forms and return the generated XFDF file path
- - `datas` : dictionnary of datas
+Generates an XFDF file suited for filling PDF forms and returns the generated XFDF file path
+ - `datas` : dictionary of datas
 
 ### `get_num_pages`
 Return the number of pages for a given PDF
  - `pdf_path` : input PDF file
 
 ### `replace_page`
-Replace a page in a PDF (pdf_path) by the PDF pointed by pdf_to_insert_path.
+Replaces a page in a PDF (pdf_path) with the PDF pointed to by pdf_to_insert_path.
  - `pdf_path` is the PDF that will have its page replaced.
  - `page_number` is the number of the page in pdf_path to be replaced. It is 1-based.
  - `pdf_to_insert_path` is the PDF that will be inserted at the old page.
