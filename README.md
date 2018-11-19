@@ -79,7 +79,7 @@ By default, path is `/usr/bin/pdftk`, but you can override it with the `PDFTK_PA
 
 ## pypdftk tmp path
 
-By default, tmp path used automatically determined by the tempfile.mkstemp() function. 
+By default, tmp path used is automatically determined by the tempfile.mkstemp() function. 
 You can override it with the `PYPDFTK_TMP_PATH` environment variable if you're having issues.
 
 ## Licence
