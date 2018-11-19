@@ -23,6 +23,11 @@ else:
     if not os.path.isfile(PDFTK_PATH):
         PDFTK_PATH = 'pdftk'
 
+if os.getenv('PYPDFTK_TMP_PATH'):
+    PYPDFTK_TMP_PATH = os.getenv('PYPDFTK_TMP_PATH')
+else:
+    PYPDFTK_TMP_PATH = None
+
 
 def check_output(*popenargs, **kwargs):
     if 'stdout' in kwargs:
@@ -68,7 +73,7 @@ def fill_form(pdf_path, datas={}, out_file=None, flatten=True):
     handle = None
     if not out_file:
         clean_on_fail = True
-        handle, out_file = tempfile.mkstemp()
+        handle, out_file = tempfile.mkstemp(dir=PYPDFTK_TMP_PATH)
 
     cmd = "%s %s fill_form %s output %s" % (PDFTK_PATH, pdf_path, tmp_fdf, out_file)
     if flatten:
@@ -108,7 +113,7 @@ def concat(files, out_file=None):
     clean_on_fail = False
     if not out_file:
         clean_on_fail = True
-        handle, out_file = tempfile.mkstemp()
+        handle, out_file = tempfile.mkstemp(dir=PYPDFTK_TMP_PATH)
     if len(files) == 1:
         shutil.copyfile(files[0], out_file)
     args = [PDFTK_PATH]
@@ -155,7 +160,7 @@ def gen_xfdf(datas={}):
 %s
     </fields>
 </xfdf>""" % "\n".join(fields)
-    handle, out_file = tempfile.mkstemp()
+    handle, out_file = tempfile.mkstemp(dir=PYPDFTK_TMP_PATH)
     f = open(out_file, 'wb')
     f.write((tpl.encode('UTF-8')))
     f.close()
@@ -217,7 +222,7 @@ def pdftk_cmd_util(pdf_path, action="compress", out_file=None, flatten=True):
     clean_on_fail = False
     if not out_file:
         clean_on_fail = True
-        handle, out_file = tempfile.mkstemp()
+        handle, out_file = tempfile.mkstemp(dir=PYPDFTK_TMP_PATH)
 
     cmd = "%s %s output %s %s" % (PDFTK_PATH, pdf_path, out_file, action)
 

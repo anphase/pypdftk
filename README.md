@@ -1,6 +1,6 @@
 # pypdftk [![circleci](https://circleci.com/gh/revolunet/pypdftk.svg?style=shield&circle-token=78ab3159527f865cf8ee850b3c1c9fcce8ccf631)](https://circleci.com/gh/revolunet/pypdftk) [![travis](https://travis-ci.org/yguarata/pypdftk.svg?branch=master)](https://travis-ci.org/yguarata/pypdftk)
 
-Python module to drive the awesome [pdftk][0] binary.
+Python module to drive the awesome [pdftk][0] binary. This is a fork of the official release with some additional customisations.
 
 Proudly brought to you by the [revolunet][1] team and [awesome contributors](https://github.com/revolunet/pypdftk/graphs/contributors)
 
@@ -76,6 +76,11 @@ out_pdf = pypdftk.concat(['/path/to/cover.pdf', generated_pdf])
 ## pdftk path
 
 By default, path is `/usr/bin/pdftk`, but you can override it with the `PDFTK_PATH` environment variable
+
+## pypdftk tmp path
+
+By default, tmp path used automatically determined by the tempfile.mkstemp() function. 
+You can override it with the `PYPDFTK_TMP_PATH` environment variable if you're having issues.
 
 ## Licence
 This module is released under the permissive [MIT license](http://revolunet.mit-license.org). Your contributions are always welcome.
