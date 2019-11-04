@@ -30,11 +30,10 @@ except ModuleNotFoundError:
 else:
     PYPDFTK_TMP_PATH = settings.PYPDFTK_TMP_PATH
 
-
 if not os.path.isfile(PYPDFTK_TMP_PATH):
     PYPDFTK_TMP_PATH = None
 
-print(f"Environment temp path: {PYPDFTK_TMP_PATH}")
+logging.info(f"Environment temp path: {PYPDFTK_TMP_PATH}")
 
 
 def check_output(*popenargs, **kwargs):
