@@ -15,3 +15,6 @@ except (configparser.NoSectionError, configparser.NoOptionError, KeyError):
     else:
         current_path = os.path.abspath('')
         PYPDFTK_TMP_PATH = os.path.join(current_path, 'tmp')
+else:
+    if PYPDFTK_TMP_PATH:
+        PYPDFTK_TMP_PATH = os.path.join(current_path, PYPDFTK_TMP_PATH)

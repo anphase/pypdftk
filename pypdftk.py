@@ -24,13 +24,13 @@ else:
         PDFTK_PATH = 'pdftk'
 
 try:
-    from . import settings
+    import settings
 except ModuleNotFoundError:
     PYPDFTK_TMP_PATH = 'tmp'
 else:
     PYPDFTK_TMP_PATH = settings.PYPDFTK_TMP_PATH
 
-if not os.path.isfile(PYPDFTK_TMP_PATH):
+if not os.path.isdir(PYPDFTK_TMP_PATH):
     PYPDFTK_TMP_PATH = None
 
 logging.warning(f"Environment temp path: {PYPDFTK_TMP_PATH}")
