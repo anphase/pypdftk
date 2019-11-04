@@ -23,9 +23,15 @@ else:
     if not os.path.isfile(PDFTK_PATH):
         PDFTK_PATH = 'pdftk'
 
-if os.getenv('PYPDFTK_TMP_PATH'):
-    PYPDFTK_TMP_PATH = os.getenv('PYPDFTK_TMP_PATH')
+try:
+    from . import settings
+except ModuleNotFoundError:
+    PYPDFTK_TMP_PATH = 'tmp'
 else:
+    PYPDFTK_TMP_PATH = settings.PYPDFTK_TMP_PATH
+
+
+if not os.path.isfile(PYPDFTK_TMP_PATH):
     PYPDFTK_TMP_PATH = None
 
 
