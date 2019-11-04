@@ -33,7 +33,7 @@ else:
 if not os.path.isfile(PYPDFTK_TMP_PATH):
     PYPDFTK_TMP_PATH = None
 
-logging.info(f"Environment temp path: {PYPDFTK_TMP_PATH}")
+logging.warning(f"Environment temp path: {PYPDFTK_TMP_PATH}")
 
 
 def check_output(*popenargs, **kwargs):
